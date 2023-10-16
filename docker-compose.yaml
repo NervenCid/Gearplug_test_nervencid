@@ -1,0 +1,33 @@
+#Esto es un comentario
+
+#Para ejecutar este archivo:
+#   >docker-compose up
+
+#Definimos la version (En este caso '3.2' es OBLIGATORIO)
+version: '3.2'
+
+#Definimos los servicios
+services:
+
+    #Declaramos el servicio 'rabbitmq'
+    rabbitmq:
+        #Seleccionamos la imagen
+        image: "rabbitmq:management"
+        #Definimos el nombre del contenedor
+        container_name: rabbitmq
+        #Definimos los puertos
+        ports:
+            - "5672:5672" #Este puerto sirve para publicar y consumir mensajes
+            - "15672:15672" #Este puerto permite navegar en la herramienta de administracion de 'RabbitMQ'
+        #Definimos el volumen donde se almacenaran los datos
+        volumes:
+            - ./Infraestructura/rabbitmqdata:/var/lib/rabbitmq"
+        #Declaramos el 'hostname' para gestionar internamente como se almacena la informacion
+        hostname: rabbitmq
+        #
+        networks:
+            - app
+
+networks: 
+    app:
+        driver: bridge
