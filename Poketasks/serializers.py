@@ -8,5 +8,5 @@ from .models import Pokemon
 class PokemonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pokemon
-        fields = ('pokemonName', 'order', 'abilities')
+        fields = '__all__'
         

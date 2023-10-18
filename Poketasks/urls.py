@@ -8,7 +8,7 @@ from .api import PokemonViewSet
 router = routers.DefaultRouter()
 
 #Registramos las rutas
-router.register('api/pokemons', PokemonViewSet, 'pokemon')
+router.register('api/pokemon', PokemonViewSet, 'pokemon')
 
 #Generamos las 'urls'
 urlpatterns = router.urls

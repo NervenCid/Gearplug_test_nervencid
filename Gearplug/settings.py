@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Poketasks',
+    'django_celery_beat',
+    'Poketasks'
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,31 @@ CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+#Configuracion email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='')
+
+#Correo receptor
+RECIPIENT_EMAIL = config('RECIPIENT_EMAIL', default='')
+
+#Configuracion de las tareas periodicas de Celery
+CELERY_BEAT_SCHEDULE = {
+    'create_random_pokemon': {
+        'task': 'Poketasks.tasks.create_random_pokemon',  # Reemplaza con la ruta correcta de tu tarea
+        'schedule': 35.0,  # Ejecuta cada 35 segundos
+        'args': (),
+    },
+}
+
+#Configuramos la autenticacion por Token
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
