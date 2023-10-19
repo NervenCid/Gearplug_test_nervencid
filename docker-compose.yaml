@@ -24,10 +24,49 @@ services:
             - ./Infraestructura/rabbitmqdata:/var/lib/rabbitmq"
         #Declaramos el 'hostname' para gestionar internamente como se almacena la informacion
         hostname: rabbitmq
-        #
-        networks:
-            - app
+        #Definimos las variables de entorno
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
+        extra_hosts:
+        - "host.docker.internal:host-gateway"
 
-networks: 
-    app:
-        driver: bridge
+    #Iniciamos la 'api' de 'django rest framework'    
+    web:
+        #Indicamos las dependencias de esta etapa
+        depends_on:
+            - rabbitmq
+        #Construimos la imagen basada en el archivo 'Dockerfile' del directorio actual 
+        build: .
+        #Definimos los puertos
+        expose:
+            - "8000"
+        #Definimos los volumenes que permitiran recargar el codigo en tiempo real
+        #Copiamos TODOS los archivos de la carpeta actual a la carpeta '/code dentro del contenedor' y viceversa
+        #Esto permitira que el contenedor se actualice en tiempo real
+        #volumes:
+        #    - ./code:/code 
+        extra_hosts:
+        - "host.docker.internal:host-gateway"
+            
+    celery_worker:
+        #Indicamos las dependencias de esta etapa
+        depends_on:
+            - rabbitmq
+            - web
+        build: .
+        command: celery -A Gearplug worker -l info -P solo
+        extra_hosts:
+        - "host.docker.internal:host-gateway"
+
+    celery_beat:
+        #Indicamos las dependencias de esta etapa
+        depends_on:
+            - rabbitmq
+            - web
+            - celery_worker
+        build: .
+        command: celery -A Gearplug beat -l info
+        extra_hosts:
+        - "host.docker.internal:host-gateway"
+

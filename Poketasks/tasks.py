@@ -9,6 +9,9 @@ import requests
 #Importamos el modulo para generar numeros aleatorios
 import random
 
+#Esto es para desacoplar las variables de entorno e importarlas de un archivo .env
+from decouple import config
+
 #Declaramos la tarea
 @shared_task
 def create_random_pokemon():
@@ -17,7 +20,7 @@ def create_random_pokemon():
     pokeapi_url = 'https://pokeapi.co/api/v2/pokemon/'
 
     #Definimos la 'url' del 'api'
-    api_url = 'http://localhost:8000/api/pokemon/'
+    api_url = config('API_URL', default='')
 
     #Generamos un 'id' aleatorio
     random_pokemon_id = random.randint(1, 1292)

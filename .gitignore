@@ -163,3 +163,5 @@ celerybeat-schedule.bak
 Poketasks/migrations/
 celerybeat-schedule.dat
 celerybeat-schedule.dir
+.env.dev
+.env.prod

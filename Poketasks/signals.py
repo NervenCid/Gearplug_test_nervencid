@@ -33,3 +33,5 @@ def send_email(sender, instance, created, **kwargs):
         except Exception as e:
             #return Response({'error en el envio de email': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             print('No se envio el correo electronico: ',  str(e))
+    
+    

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+
+#Esto es para desacoplar las variables de entorno e importarlas de un archivo .env
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +28,7 @@ SECRET_KEY = 'django-insecure-db^fr=82743#x1l=(c=#_j1s*df)48&9ppqie+#=pcftby8b97
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #'rest_framework.authtoken',
     'django_celery_beat',
     'Poketasks'
 ]
@@ -127,7 +130,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración del broker para Celery (usando RabbitMQ)
-CELERY_BROKER_URL = 'pyamqp://guest@localhost//'  # URL de conexión a RabbitMQ
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='')  # URL de conexión a RabbitMQ
 
 # Configurar el resultado de las tareas (result backend)
 CELERY_RESULT_BACKEND = 'rpc://'
@@ -158,9 +161,3 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-#Configuramos la autenticacion por Token
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-}
