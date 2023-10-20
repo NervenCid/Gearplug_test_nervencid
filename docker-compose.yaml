@@ -39,6 +39,8 @@ services:
         #Construimos la imagen basada en el archivo 'Dockerfile' del directorio actual 
         build: .
         #Definimos los puertos
+        ports:
+            - '8000:8000'
         expose:
             - "8000"
         #Definimos los volumenes que permitiran recargar el codigo en tiempo real
